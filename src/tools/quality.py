@@ -1,5 +1,4 @@
-from . import load_dataset, DATASET_SCHEMA
-from ..tools_registry import register_tool
+from . import load_dataset
 from typing import Dict
 
 
@@ -17,12 +16,3 @@ def detect_missing_values(dataset_id: str) -> Dict[str, float]:
     except Exception as e:
         raise RuntimeError(
             f"Failed to detect missing values for dataset '{dataset_id}': {str(e)}")
-
-
-# Register the tool
-register_tool(
-    name="detect_missing_values",
-    description="Analyze a dataset to detect missing values in each column, returning the proportion of missing values per column.",
-    schema=DATASET_SCHEMA,
-    fn=detect_missing_values
-)

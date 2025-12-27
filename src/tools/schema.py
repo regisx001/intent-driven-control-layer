@@ -1,5 +1,4 @@
-from . import load_dataset, DATASET_SCHEMA
-from ..tools_registry import register_tool
+from . import load_dataset
 from typing import Dict, List, Any
 
 
@@ -22,12 +21,3 @@ def analyze_schema(dataset_id: str) -> Dict[str, List[Dict[str, Any]]]:
     except Exception as e:
         raise RuntimeError(
             f"Failed to analyze schema for dataset '{dataset_id}': {str(e)}")
-
-
-# Register the tool
-register_tool(
-    name="analyze_schema",
-    description="Analyze the schema of a dataset, providing column names, data types, and missing value counts.",
-    schema=DATASET_SCHEMA,
-    fn=analyze_schema
-)
