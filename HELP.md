@@ -1,224 +1,151 @@
-# Intent-Driven Control Layer  
-### Foundational Project for *Datanova AI*
+# Intent-Driven Control Layer
+### Operational Guide for Machine Learning and Data Science
 
 ---
 
-## 1. Project Overview
+## 1. Purpose
 
-This project introduces a **natural-language control layer** on top of an existing data and ML platform.  
-The objective is **not** to replace current workflows (forms, charts, configuration-driven flows), but to **augment** them with a chat-based interface that allows power users to interact with the platform using natural language.
+This project adds a natural-language interface for machine learning and data-science operations while preserving strict execution control.
 
-The AI layer functions as an **intent translation mechanism**, converting user input into **structured, validated platform actions**.  
-All execution remains deterministic and governed by the platform itself.
+It enables users to express intent in plain language, then converts that request into structured platform actions.
 
 ---
 
-## 2. Problem Statement
+## 2. Design Rule
 
-The current platform:
-- Is stable and reliable
-- Uses forms, dropdowns, and charts
-- Requires multiple inputs for advanced workflows
+> **The AI proposes. The platform decides.**
 
-As functionality grows:
-- User interaction becomes more complex
-- Power users experience friction
-- Repetitive tasks slow productivity
-
-The challenge is to:
-> Reduce interaction complexity **without compromising safety, correctness, or architectural integrity**.
+The AI layer is used for interpretation only.
+Execution remains deterministic and enforced by platform validators and routers.
 
 ---
 
-## 3. Core Idea
+## 3. Why This Exists
 
-Introduce a **chat interface** that allows users to express *intent* in natural language, for example:
-- “Load the iris dataset”
-- “Clean the data and retrain the model”
-- “Show model performance”
-
-The AI **does not execute actions**.  
-It proposes **structured intent**, which is validated and executed through existing platform APIs.
-
----
-
-## 4. Fundamental Design Principle
-
-> **The AI proposes. The system decides.**
-
-This principle ensures:
-- No autonomous behavior
-- No bypassing validation or business rules
-- Full transparency and control
-
-The platform remains the **single source of truth**.
+As ML/DS platforms grow, workflows become harder to operate through forms alone.
+This layer reduces interaction friction for power users while preserving:
+- Safety
+- Correctness
+- Traceability
+- Architectural boundaries
 
 ---
 
-## 5. Architectural Philosophy
+## 4. Supported Intent Scope
 
-- The AI layer is isolated from execution
-- The platform logic remains unchanged
-- The chat interface is optional
-- The system behaves identically with or without AI enabled
+The intent layer is limited to explicit capabilities, such as:
+- Load datasets
+- Inspect schema and metadata
+- Run data-quality checks
+- Trigger approved preprocessing routines
+- Train supported model families
+- Run model evaluation
+- Request predefined visual outputs
 
-This guarantees reversibility and maintainability.
-
----
-
-## 6. Platform Capabilities and Scope
-
-The AI layer is limited to a **small, explicit set of supported actions**, such as:
-- Loading a dataset
-- Inspecting dataset metadata
-- Cleaning data using predefined strategies
-- Training a model with supported algorithms
-- Evaluating a trained model
-- Displaying predefined visualizations
-
-The AI cannot invent new operations or access internal logic beyond these capabilities.
+The system rejects unsupported or out-of-scope actions.
 
 ---
 
-## 7. Intent Contract
+## 5. Intent Format
 
-Each user request results in **one intent object**.
+Each request yields one structured intent object.
 
-Example:
 ```json
 {
-  "action": "model.train",
+  "action": "data.profile",
   "params": {
-    "model_type": "logistic_regression",
-    "dataset": "iris"
+    "dataset": "energy"
   },
-  "confidence": 0.81,
+  "confidence": 0.91,
   "requires_confirmation": false
 }
-## Rules
+```
 
-- One action per intent  
-- Explicit parameters only  
-- No execution logic  
-- No implicit assumptions about system state  
-
-This contract decouples language understanding from system execution.
-
----
-
-## 8. Intent Service Responsibilities
-
-The Intent Service (LLM-backed) is responsible for:
-
-- Interpreting user language  
-- Mapping intent to a supported action  
-- Producing structured JSON  
-- Indicating uncertainty when necessary  
-
-It must **not**:
-
-- Execute platform logic  
-- Chain actions  
-- Modify state  
-- Bypass validation  
+Rules:
+- One action per intent
+- Explicit params only
+- No direct execution instructions
+- No hidden assumptions about state
 
 ---
 
-## 9. Validator and Router Responsibilities
+## 6. Layer Responsibilities
 
-This layer is deterministic and contains **no AI logic**.
+### Intent Service (LLM)
+- Understands user language
+- Maps request to supported actions
+- Produces constrained structured output
+- Signals ambiguity and low confidence
 
-Responsibilities include:
-
-- Schema validation  
-- Permission checks  
-- Platform state validation  
-- Risk assessment and confirmation handling  
-- Routing valid intents to existing APIs  
-
-This layer enforces correctness and safety.
-
----
-
-## 10. Failure Handling as a First-Class Feature
-
-The system must explicitly handle:
-
-- Ambiguous requests  
-- Unsupported operations  
-- Invalid execution order  
-- Low-confidence interpretations  
-
-Expected behaviors include:
-
-- Asking the user to rephrase  
-- Rejecting invalid actions with clear messages  
-- Requesting confirmation for sensitive operations  
-- Redirecting users to the traditional UI when appropriate  
-
-Failure is intentional, visible, and controlled.
+### Validator + Router (Deterministic)
+- Schema validation
+- Permission and policy checks
+- State-sequence validation
+- Confirmation policy for sensitive actions
+- Action dispatch to trusted platform APIs
 
 ---
 
-## 11. Chat Interface Role
+## 7. Failure Handling
 
-The chat interface:
+The platform must fail safely and clearly.
 
-- Serves as an alternative input method  
-- Displays the interpreted intent before execution  
-- Allows users to confirm or cancel actions  
-- Presents results using existing visual components  
+Typical failure cases:
+- Unsupported operation
+- Missing required parameters
+- Invalid execution order
+- Ambiguous request
+- Low-confidence interpretation
 
-The interface does not blindly trust AI output.
-
----
-
-## 12. Use of External Language Models
-
-External LLMs may be used to:
-
-- Improve language understanding  
-- Generate clearer explanations  
-- Handle phrasing and clarification  
-
-The LLM is treated strictly as a **language component**, not an authority over system behavior.
+Expected outcomes:
+- Clarification prompt
+- Explicit rejection with reasons
+- Confirmation workflow for risky actions
+- Fallback to non-chat UI paths
 
 ---
 
-## 13. Definition of Done
+## 8. Chat Interface Role
 
-The project is considered complete when:
-
-- Valid workflows can be driven through chat  
-- Invalid or unsafe actions are blocked  
-- All executions go through existing APIs  
-- Traditional UI remains fully functional  
-- The AI layer can be disabled safely  
-- System behavior is explainable and auditable  
+The chat UI is an optional control surface.
+It should:
+- Show interpreted intent before execution
+- Allow confirm/cancel interactions
+- Display deterministic results and errors
+- Reuse existing platform visual components
 
 ---
 
-## 14. What This Project Is and Is Not
+## 9. Safety Constraints
 
-### This project is:
-- A control-layer enhancement  
-- A UX simplification mechanism  
-- A system architecture exercise  
-
-### This project is not:
-- A chatbot  
-- An autonomous agent  
-- An AutoML system  
-- A replacement for explicit software logic  
+This project must not allow:
+- Direct AI-triggered mutations outside validator/router
+- Tool execution that bypasses policy checks
+- Multi-action hidden chaining without explicit user approval
+- Non-auditable behavior
 
 ---
 
-## 15. Long-Term Vision
+## 10. Definition of Done
 
-This project establishes the foundation for **Datanova AI**:
+The implementation is complete when:
+- Users can run valid ML/DS workflows via intent
+- Invalid or unsafe intents are blocked reliably
+- Existing forms/APIs remain functional
+- AI can be disabled without breaking core flows
+- Decisions and outcomes are auditable
 
-- A scalable and controlled AI interaction layer  
-- Extendable to additional capabilities over time  
-- Grounded in strong architectural boundaries  
+---
 
-The focus is **reliability, clarity, and control** — not AI novelty.
+## 11. What This Is Not
+
+- Not a chatbot product
+- Not an autonomous ML agent
+- Not a replacement for deterministic platform logic
+- Not a shortcut around governance or controls
+
+---
+
+## 12. Direction
+
+Evolve this into a robust intent control layer for machine learning and data science, with stronger validation, better explainability, and stable operational guardrails.

@@ -1,190 +1,183 @@
-# Datanova AI – Project Phases Roadmap
+# Intent Layer for Machine Learning and Data Science - Project Roadmap
 
-This roadmap breaks the project into **clear, progressive phases**.  
-Each phase has a purpose, concrete outputs, and explicit “done” criteria.
+This roadmap breaks delivery into clear phases.
+Each phase must provide standalone value and maintain deterministic system control.
 
 ---
 
-## Phase 1 — Capability & Intent Modeling (Foundation)
+## Phase 1 - Capability and Intent Modeling
 
 ### Goal
-Lock down **what the system can do** and **how intent is represented**, before touching any LLM or UI.
+Define exactly what the intent layer can do before expanding LLM behavior or UI features.
 
 ### Key Tasks
-- Enumerate supported platform capabilities
-- Define the intent JSON schema
-- Define allowed parameters and constraints
-- Decide which actions are read-only vs mutating
+- Enumerate supported ML/DS actions
+- Define strict intent schema
+- Define parameter constraints and validation rules
+- Separate read-only actions from mutating actions
 
 ### Deliverables
-- Capability list (actions + params)
-- Intent schema (JSON / TypeScript / OpenAPI)
-- Validation rules (static)
+- Capability matrix
+- Intent schema (JSON/TypeScript/OpenAPI)
+- Static validation ruleset
 
 ### Done When
-- You can reject an invalid intent without any AI involved
-- The intent schema feels boring and obvious (this is good)
+- Invalid intents are rejected without AI dependence
+- Supported intent contract is explicit and stable
 
 ---
 
-## Phase 2 — Validator & Router (Deterministic Core)
+## Phase 2 - Deterministic Validator and Router
 
 ### Goal
-Build the **non-AI heart** of the system.
+Build the non-AI execution core that enforces correctness and safety.
 
 ### Key Tasks
 - Implement schema validation
-- Implement state validation (e.g. “train before load” is invalid)
-- Implement permission / safety checks
-- Implement confirmation logic for risky actions
-- Route valid intents to existing platform APIs
+- Implement sequencing/state validation
+- Add permission and policy checks
+- Add confirmation logic for risky operations
+- Route validated intents to existing ML/DS APIs
 
 ### Deliverables
 - Validator module
 - Router module
-- Clear error types and messages
+- Structured error model
 
 ### Done When
-- You can execute intents from a JSON file
-- The system works perfectly **without any AI**
+- Intents can be executed from static JSON
+- Core execution works correctly with no LLM involved
 
 ---
 
-## Phase 3 — Intent Service (LLM Integration)
+## Phase 3 - Intent Service Integration
 
 ### Goal
-Introduce the LLM **only as a language-to-intent translator**.
+Use LLMs only for language-to-intent translation.
 
 ### Key Tasks
-- Define strict system prompt
-- Implement intent generation endpoint
-- Handle low-confidence or ambiguous outputs
-- Enforce JSON-only responses
-- Add retry / clarification strategy
+- Define strict prompt contract
+- Enforce structured output mode
+- Handle ambiguity and low-confidence responses
+- Add retry and clarification policy
+- Isolate LLM dependency behind a stable interface
 
 ### Deliverables
-- Intent Service (isolated)
-- Prompt + examples
-- Confidence and uncertainty handling
+- Intent service component
+- Prompt library with examples
+- Confidence and uncertainty strategy
 
 ### Done When
-- The LLM cannot trigger execution directly
-- Bad LLM output never crashes the system
-- You can swap the LLM with a stub
+- LLM cannot execute actions directly
+- Invalid LLM output is safely handled
+- LLM provider can be swapped with minimal impact
 
 ---
 
-## Phase 4 — Chat Interface (Controlled UX)
+## Phase 4 - Controlled Chat Experience
 
 ### Goal
-Expose the intent system to users **safely and transparently**.
+Expose intent workflows through chat while preserving user control.
 
 ### Key Tasks
-- Build a chat panel (FE)
-- Display interpreted intent before execution
-- Add confirm / cancel flow
-- Show errors and explanations clearly
-- Reuse existing charts and views
+- Build chat interaction layer
+- Preview interpreted intent before execution
+- Add confirm/cancel for sensitive actions
+- Show clear validation and execution feedback
+- Reuse existing charts and result views
 
 ### Deliverables
-- Chat UI component
-- Intent preview UI
-- Confirmation UX
+- Chat UI panel
+- Intent preview component
+- Confirmation UX flow
 
 ### Done When
-- Users can see *what the system thinks they asked*
-- Users can stop actions before execution
-- Forms still work unchanged
+- Users can verify intent before execution
+- Users can stop risky actions safely
+- Existing non-chat flows remain unaffected
 
 ---
 
-## Phase 5 — Feedback & Explanation Layer
+## Phase 5 - Result and Explanation Layer
 
 ### Goal
-Close the loop between **action → result → understanding**.
+Make outcomes understandable and actionable.
 
 ### Key Tasks
-- Surface execution results in chat
-- Optionally use LLM to explain results
-- Link results to visualizations
-- Ensure explanations never affect state
+- Format action results for chat and UI
+- Add optional explanation generation
+- Link outputs to metrics and visualizations
+- Ensure explanations do not mutate system state
 
 ### Deliverables
 - Result formatter
-- Explanation service (optional LLM)
+- Optional explanation service
 - Error explanation mapping
 
 ### Done When
 - Users understand what happened and why
-- Explanations are helpful but optional
+- Explanations are useful and optional
 
 ---
 
-## Phase 6 — Safety, Failure & Guardrails
+## Phase 6 - Guardrails and Operational Safety
 
 ### Goal
-Make failure **intentional, safe, and boring**.
+Ensure safe, predictable behavior under error and misuse conditions.
 
 ### Key Tasks
-- Design failure taxonomy
-- Add fallback paths (forms, help)
-- Add rate limiting / abuse prevention
+- Define failure taxonomy
+- Add fallback flows to existing UI
+- Add rate limits and abuse prevention
 - Add logging and audit trail
 
 ### Deliverables
-- Failure-handling policy
-- Audit logs
-- Clear user-facing failure messages
+- Failure policy
+- Audit logging strategy
+- User-facing failure message guidelines
 
 ### Done When
-- The system fails loudly and safely
-- Nothing irreversible happens without confirmation
+- Failure modes are explicit and safe
+- No irreversible action occurs without control checks
 
 ---
 
-## Phase 7 — Evaluation & Hardening
+## Phase 7 - Evaluation and Hardening
 
 ### Goal
-Decide whether this should live on.
+Assess whether the intent layer improves ML/DS workflows in practice.
 
 ### Key Tasks
-- Measure success vs forms
-- Identify failure patterns
-- Decide what not to support
-- Document architectural decisions
+- Measure effectiveness against existing UI workflows
+- Analyze failure patterns and user friction
+- Define unsupported scenarios intentionally
+- Document architectural decisions and trade-offs
 
 ### Deliverables
-- Evaluation notes
+- Evaluation report
 - Known limitations list
-- Architecture README
+- Architecture documentation update
 
 ### Done When
-- You can clearly justify keeping or killing the feature
+- Value is measurable and defensible
+- Scope boundaries are clear and maintained
 
 ---
 
-## Phase 8 — Optional Extensions (Only If Worth It)
+## Phase 8 - Optional Extensions
+
+Only pursue extensions that preserve control guarantees.
 
 Examples:
-- Multi-step intent planning
-- Intent history and undo
-- Power-user shortcuts
-- Custom domain DSL
-- Partial automation with human approval
-
-These are **earned**, not assumed.
+- Multi-step intent plans with explicit approval checkpoints
+- Intent history and undo flows
+- Domain-specific shortcuts for advanced analysts
+- Partial automation with mandatory human confirmation
 
 ---
 
-## Final Guiding Principle
+## Guiding Principle
 
-> Each phase must be valuable **on its own**.  
-> If a phase feels useless without the next one, you moved too fast.
+> Every phase must be useful on its own.
 
-This roadmap ensures:
-- Architectural discipline
-- Safe AI integration
-- Real learning (not demos)
-- A solid foundation for *Datanova AI*
-
----
+This ensures the intent layer evolves with architectural discipline, reliable safety controls, and real value for machine learning and data science operations.
