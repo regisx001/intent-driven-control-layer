@@ -9,46 +9,39 @@ model = 'functiongemma'
 
 
 messages = [
-    {'role': 'user', 'content': 'Print the last rows of the energy dataset !!'}]
+    {'role': 'user', 'content': 'Print the last 6 rows of the energy dataset !!'}]
 
 print('Prompt:', messages[0]['content'])
 
-response = chat(model, messages=messages, tools=available_tools)
-
 # The Agent Loop: Keep running until the model gives a final text answer
 while True:
+    # 1. Call the model (Only call it here, inside the loop)
     response = chat(model, messages=messages, tools=available_tools)
 
-    # 1. Break condition: If there are no tool calls, the model is giving the final answer!
+    # 2. Break condition: If there are no tool calls, it's the final answer
     if not response.message.tool_calls:
         print('\nFinal Response:', response.message.content)
         break
 
-    print(f"Tools : {response.message.tool_calls}")
+    print(f"\nTools Requested: {response.message.tool_calls}")
 
-    # 2. The model wants to use a tool. Add its request to the chat history.
+    # 3. Append the model's tool request to the history
     messages.append(response.message)
 
-    # 3. Process every tool the model asked for in this specific turn
+    # 4. Execute the requested tools
     for tool in response.message.tool_calls:
-        print(
-            f"\n[Model is calling: {tool.function.name}({tool.function.arguments})]")
+        print(f"[Executing: {tool.function.name}({tool.function.arguments})]")
 
-        # Execute the appropriate Python function dynamically
         if tool.function.name == 'get_last_rows':
+            # This will now hold the actual markdown string of the dataframe!
             result = get_last_rows(**tool.function.arguments)
-        # elif tool.function.name == 'get_wind_speed':
-        #     result = get_wind_speed(**tool.function.arguments)
         else:
             result = f"Error: Tool {tool.function.name} not found."
 
-        print(f"[Tool Result: {result}]")
+        print(f"[Tool Result length: {len(str(result))} characters]")
 
-        # 4. Append the tool's result back into the chat history
+        # 5. Send the stringified data back to the LLM
         messages.append({
             'role': 'tool',
             'content': str(result)
         })
-
-    # The loop repeats. The model reads the new history (with the tool result)
-    # and decides whether to call another tool or formulate the final answer.
