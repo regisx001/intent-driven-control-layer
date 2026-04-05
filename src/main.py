@@ -1,18 +1,41 @@
-from fastapi import FastAPI
-from .api.tools_router import router as api_router
+import json
+
+from rich import print
+
+from ollama import chat
+
+model = 'functiongemma'
 
 
-app = FastAPI(title="Intent-Driven Control Layer Adapter")
+def get_weather(city: str) -> str:
+    """
+    Get the current weather for a city.
+
+    Args:
+      city: The name of the city
+
+    Returns:
+      A string describing the weather
+    """
+    return json.dumps({'city': city, 'temperature': 22, 'unit': 'celsius', 'condition': 'sunny'})
 
 
-app.include_router(api_router, prefix="/api/v1", tags=["tools"])
+messages = [{'role': 'user', 'content': 'What is the weather in Tangier?'}]
+print('Prompt:', messages[0]['content'])
 
+response = chat(model, messages=messages, tools=[get_weather])
 
-@app.get("/")
-def root():
-    return {"message": app.title}
+if response.message.tool_calls:
+    tool = response.message.tool_calls[0]
+    print(f'Calling: {tool.function.name}({tool.function.arguments})')
 
+    result = get_weather(**tool.function.arguments)
+    print(f'Result: {result}')
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run("src.main:app", host="0.0.0.0", port=8000, reload=True)
+    messages.append(response.message)
+    messages.append({'role': 'tool', 'content': result})
+
+    final = chat(model, messages=messages)
+    print('Response:', final.message.content)
+else:
+    print('Response:', response.message.content)
