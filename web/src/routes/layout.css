@@ -1,0 +1,89 @@
+:root {
+    --pico-font-family: 'IBM Plex Sans', 'Segoe UI', sans-serif;
+    --pico-primary: #0c7489;
+    --pico-primary-hover: #095f70;
+    --pico-primary-focus: rgba(12, 116, 137, 0.25);
+    --pico-border-radius: 0.85rem;
+}
+
+html,
+body {
+    min-height: 100%;
+}
+
+body {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 15% 0%, rgba(12, 116, 137, 0.14), transparent 45%),
+        radial-gradient(circle at 85% 15%, rgba(251, 191, 36, 0.1), transparent 35%),
+        linear-gradient(180deg, #f3f8fb 0%, #ffffff 55%);
+}
+
+main.app-shell {
+    max-width: 1220px;
+    margin-inline: auto;
+    padding-block: 2.5rem 4rem;
+}
+
+h1,
+h2,
+h3 {
+    letter-spacing: -0.02em;
+}
+
+header>p {
+    max-width: 62ch;
+}
+
+section+section {
+    margin-top: 1.2rem;
+}
+
+article {
+    background: rgba(255, 255, 255, 0.86);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(10, 37, 64, 0.08);
+}
+
+.error-text {
+    color: var(--pico-del-color);
+    font-weight: 600;
+}
+
+pre {
+    margin: 0;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.trace-card {
+    margin-top: 1rem;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(4px);
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background:
+            radial-gradient(circle at 15% 0%, rgba(21, 92, 107, 0.38), transparent 48%),
+            radial-gradient(circle at 80% 20%, rgba(129, 91, 30, 0.3), transparent 40%),
+            linear-gradient(180deg, #091016 0%, #05080d 70%);
+    }
+
+    article {
+        background: rgba(15, 25, 35, 0.84);
+        border: 1px solid rgba(142, 180, 199, 0.18);
+    }
+
+    .trace-card {
+        background: rgba(11, 21, 31, 0.92);
+    }
+}
+
+@media (max-width: 900px) {
+    main.app-shell {
+        padding-block: 1.2rem 2rem;
+    }
+}

@@ -375,3 +375,12 @@ Shades range from `50` to `950`. Use these to build a custom theme.
 ---
 
 ## Quick Cheat Sheet
+Layout → .container, .container-fluid, .grid, .overflow-auto
+Themes → data-theme="light|dark", meta color-scheme
+Buttons → <button>, .secondary, .contrast, .outline, role="button"
+Forms → Native elements, role="switch", aria-invalid
+Components → <details>, <article>, <dialog>, <progress>, data-tooltip
+Loading → aria-busy="true"
+Groups → role="group"
+Custom → CSS vars (--pico-*), Sass @use with config
+

@@ -117,3 +117,39 @@ This project is successful when:
 ## 9. Long-Term Direction
 
 Build a reliable, extensible intent layer for machine learning and data science that scales with platform capabilities while preserving safety, traceability, and control.
+
+---
+
+## 10. FastAPI Server (Simple)
+
+This project now includes a simple FastAPI server in `src/api.py`.
+
+### Run
+
+```bash
+pip install -r requirements.txt
+uvicorn src.api:app --reload
+```
+
+### Open
+
+- API root: `http://127.0.0.1:8000/`
+- API docs: `http://127.0.0.1:8000/docs`
+
+### Starter endpoints
+
+- `GET /health`
+- `GET /datasets`
+- `GET /datasets/{dataset}/head?n_rows=5`
+- `GET /datasets/{dataset}/tail?n_rows=5`
+- `POST /intent/query`
+
+`POST /intent/query` example body:
+
+```json
+{
+  "prompt": "give me the last 1 row in energy dataset",
+  "model": "functiongemma",
+  "max_steps": 8
+}
+```
