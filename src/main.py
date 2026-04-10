@@ -35,7 +35,7 @@ def _parse_tool_arguments(raw_arguments: Any) -> dict[str, Any]:
 
 
 messages = [
-    {'role': 'user', 'content': 'List available datasets.'}]
+    {'role': 'user', 'content': 'give me the 1 last row in energy dataset '}]
 
 print('Prompt:', messages[0]['content'])
 print(f"Available tools: {', '.join(sorted(tool_registry.keys()))}")
